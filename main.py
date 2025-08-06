@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Loading the Dataset
-print("Loading dataset...")
+print("Loading dataset")
 
 try:
     data_path = "unicorn_insight_dataset.csv"  
@@ -15,7 +15,7 @@ except Exception as e:
     exit()
 
 # Necessary cleanup
-print("Cleaning data...")
+print("Cleaning data")
 
 if 'Unnamed: 0' in df.columns:
     df.rename(columns={'Unnamed: 0': 'S.No'}, inplace=True)
@@ -35,7 +35,7 @@ df = df.dropna(subset=['Valuation ($B)'])
 print("Cleanup complete.\n")
 
 # Grouping data by Industry - 1st parameter and then user shall make the decision of which Industry he wants to view 
-print("Analyzing industry-wise valuation...")
+print("Analyzing industry-wise valuation")
 
 # Create a DataFrame showing industry and total valuation
 industry_grouped = df.groupby('Industry')['Valuation ($B)'].sum().reset_index()
@@ -70,7 +70,7 @@ while True:
         print("Invalid input. Please enter a valid number.")
 
 # Display top companies in that industry
-print(f"\nFetching top companies in '{selected_industry}' industry...\n")
+print(f"\nFetching top companies in '{selected_industry}' industry\n")
 
 industry_df = df[df['Industry'] == selected_industry]
 industry_df_sorted = industry_df.sort_values(by='Valuation ($B)', ascending=False)
@@ -82,6 +82,13 @@ columns_available = [col for col in columns_to_display if col in industry_df_sor
 
 print(industry_df_sorted[columns_available].to_string(index=False))
 
+# Exporting the data we gathered from here to a csv file for power BI Dashboard
+output_path = f"filtered_{selected_industry.replace(' ', '_')}_unicorns.csv"
+industry_df_sorted.to_csv(output_path, index =False)
+print("\n Filtered data exported")
+
+
+# Disclaimer, just some print statements to say that this application just assists the user and to urge the user to check for all the terms and conditions and tell him to make decisions based on more comprehensive data. 
 print("\n Disclaimer:")
 print("Investment decisions should not be based solely on valuation figures.")
 print("This tool is built to assist in identifying high-value companies across industries,")
